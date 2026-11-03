@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Globus Ai // Training Progress</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --fg: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            selection-background-color: #FFFFFF;
+            selection-color: #000000;
+        }
+
+        ::selection {
+            background: #FFFFFF;
+            color: #000000;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--fg);
+            font-family: 'Share Tech Mono', monospace;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 1-Bit Striped Pattern (Pure Black & White, no gray) */
+        .pattern-stripes {
+            background-image: repeating-linear-gradient(
+                -45deg,
+                #FFFFFF,
+                #FFFFFF 3px,
+                #000000 3px,
+                #000000 7px
+            );
+            background-size: 20px 20px;
+            animation: stripes-move 0.8s linear infinite;
+        }
+
+        @keyframes stripes-move {
+            0% { background-position: 0 0; }
+            100% { background-position: 20px 0; }
+        }
+
+        /* 1-Bit Dot Dither Pattern (Pure Black & White) */
+        .pattern-dots {
+            background-image: radial-gradient(#FFFFFF 1px, #000000 1px);
+            background-size: 4px 4px;
+        }
+
+        /* Custom 1-Bit Range Slider for Sandbox Testing */
+        input[type="range"].wd-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 12px;
+            background: #000000;
+            border: 2px solid #FFFFFF;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"].wd-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 20px;
+            background: #FFFFFF;
+            border: 2px solid #000000;
+             outline: 2px solid #FFFFFF;
+            cursor: pointer;
+        }
+
+        input[type="range"].wd-slider::-moz-range-thumb {
+            width: 14px;
+            height: 20px;
+            background: #FFFFFF;
+            border: 2px solid #000000;
+            outline: 2px solid #FFFFFF;
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+        /* Watch Dogs Brutalist Box with Corner Cuts / Brackets */
+        .wd-box {
+            position: relative;
+            border: 2px solid #FFFFFF;
+            background-color: #000000;
+        }
+
+        .wd-box::before,
+        .wd-box::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #FFFFFF;
+            pointer-events: none;
+        }
+
+        .wd-box::before {
+            top: -2px;
+            left: -2px;
+        }
+
+        .wd-box::after {
+            bottom: -2px;
+            right: -2px;
+        }
+
+        /* Corner Crosshairs */
+        .crosshair-tl::before {
+            content: '+';
+            position: absolute;
+            top: -12px;
+            left: -8px;
+            font-size: 16px;
+            line-height: 1;
+            color: #FFFFFF;
+            background: #000000;
+        }
+
+        /* Watch Dogs Glitch Effect (Strictly Black & White) */
+        .glitch-title {
+            position: relative;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .glitch-title::before,
+        .glitch-title::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            color: #FFFFFF;
+            overflow: hidden;
+        }
+
+        .glitch-title::before {
+            left: 3px;
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+            animation: glitch-slice-1 2.8s infinite linear alternate-reverse;
+        }
+
+        .glitch-title::after {
+            left: -3px;
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+            animation: glitch-slice-2 2.2s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-slice-1 {
+            0%, 80% { transform: translate(0, 0); }
+            82% { transform: translate(-6px, 2px); }
+            84% { transform: translate(6px, -2px); }
+            86% { transform: translate(0, 0); }
+            92% { transform: translate(4px, 0); background: #FFFFFF; color: #000000; }
+            94% { transform: translate(0, 0); background: #000000; color: #FFFFFF; }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes glitch-slice-2 {
+            0%, 70% { transform: translate(0, 0); }
+            72% { transform: translate(5px, 1px); }
+            74% { transform: translate(-5px, -1px); }
+            76% { transform: translate(0, 0); }
+            88% { transform: translate(-8px, 0); }
+            90% { transform: translate(0, 0); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* Blinking Terminal Cursor */
+        .cursor-blink {
+            animation: blink-step 1s steps(2, start) infinite;
+        }
+
+        @keyframes blink-step {
+            to { visibility: hidden; }
+        }
+
+        /* Inverted Button Hover (Pure Black/White Swap) */
+        .wd-btn {
+            border: 2px solid #FFFFFF;
+            background: #000000;
+            color: #FFFFFF;
+            text-transform: uppercase;
+            transition: none;
+            cursor: pointer;
+        }
+
+        .wd-btn:hover,
+        .wd-btn:active {
+            background: #FFFFFF;
+            color: #000000;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-6 md:p-10 select-none">
+
+    <header class="w-full max-w-5xl mx-auto mb-6">
+        <div class="border-2 border-white p-2.5 sm:p-3 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+            <div class="flex items-center gap-3">
+                <span class="bg-white text-black font-bold px-2 py-0.5 tracking-widest">POWERED BY RJK3R // MONITOR</span>
+                <span class="tracking-widest">SRC: <strong>status.json</strong></span>
+            </div>
+            <div class="flex items-center gap-3 sm:gap-4">
+                <span id="syncState" class="tracking-widest">[SYNC: INIT]</span>
+                <span class="bg-white text-black px-2 py-0.5 font-bold cursor-blink">300s_POLL</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-5xl mx-auto flex-grow flex flex-col items-center justify-center my-auto">
+
+        <div class="text-center mb-3 leading-none text-[10px] sm:text-xs tracking-widest" aria-hidden="true">
+            <div>╔══════════════════════════════════════════════════════╗</div>
+            <div>║  ░░░░▒▒▓▓██  PUBLIC PROGRESS TELEMETRY  ██▓▓▒▒░░░░   ║</div>
+            <div>╚══════════════════════════════════════════════════════╝</div>
+        </div>
+
+        <div class="text-center relative my-1">
+            <h1
+                id="mainTitle"
+                data-text="Globus Ai "
+                class="glitch-title text-5xl sm:text-7xl md:text-8xl font-bold tracking-widest leading-none py-2"
+            >Globus Ai </h1>
+        </div>
+
+        <div class="text-center mt-2 mb-8 sm:mb-12 flex flex-col items-center">
+            <div class="inline-flex items-center gap-3 border-2 border-white px-6 py-2 bg-black">
+                <span class="font-bold">&gt;&gt;</span>
+                <h2 class="text-lg sm:text-2xl md:text-3xl uppercase tracking-[0.25em] font-bold">
+                    Training Progress
+                </h2>
+                <span class="font-bold cursor-blink">_</span>
+            </div>
+        </div>
+
+        <section class="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch justify-center my-2">
+
+            <div class="wd-box p-6 sm:p-8 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between border-b-2 border-white pb-2.5 mb-5">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-white text-black font-bold px-2 py-0.5 text-xs">01</span>
+                            <span class="text-sm sm:text-base font-bold tracking-widest uppercase">
+                                PROGRESS // PERCENTS
+                            </span>
+                        </div>
+                        <span class="text-xs tracking-widest">[%]</span>
+                    </div>
+
+                    <div class="text-center my-4 py-4 border border-white pattern-dots">
+                        <div class="bg-black inline-block px-6 py-2.5 border border-white">
+                            <span id="percent" class="text-5xl sm:text-6xl font-bold tracking-wider">
+                                0.0%
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="my-5">
+                        <div class="flex justify-between text-xs mb-1.5 tracking-widest">
+                            <span>COMPLETION_RATIO</span>
+                            <span id="percentStatusTag">[ACTIVE]</span>
+                        </div>
+
+                        <div class="w-full h-11 border-2 border-white p-1 bg-black relative overflow-hidden">
+                            <div
+                                id="percent-bar"
+                                class="h-full bg-white relative"
+                                style="width: 0%;"
+                            ></div>
+                            <div class="absolute inset-0 flex items-center justify-between px-3 pointer-events-none" style="mix-blend-mode: difference;">
+                                <span class="text-xs font-bold tracking-widest text-white">PERCENT_FILL</span>
+                                <span id="percentBarInlineText" class="text-xs font-bold tracking-widest text-white">0.0%</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between text-[10px] sm:text-xs mt-1.5 tracking-widest">
+                            <span>0%</span>
+                            <span>25%</span>
+                            <span>50%</span>
+                            <span>75%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <div
+                        id="percentSegmentsContainer"
+                        class="grid gap-1 border border-white p-2 bg-black"
+                        style="grid-template-columns: repeat(20, minmax(0, 1fr));"
+                    ></div>
+                    <div class="bg-black border border-white p-2 text-center text-xs sm:text-sm tracking-widest overflow-hidden">
+                        <span id="percentAsciiBar">[░░░░░░░░░░░░░░░░░░░░]</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wd-box p-6 sm:p-8 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between border-b-2 border-white pb-2.5 mb-5">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-white text-black font-bold px-2 py-0.5 text-xs">02</span>
+                            <span class="text-sm sm:text-base font-bold tracking-widest uppercase">
+                                PROGRESS // STEPS
+                            </span>
+                        </div>
+                        <span class="text-xs tracking-widest">[STEP / STEPS]</span>
+                    </div>
+
+                    <div class="text-center my-4 py-4 border border-white pattern-dots">
+                        <div class="bg-black inline-block px-5 sm:px-6 py-2.5 border border-white">
+                            <p id="step" class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-wider m-0">
+                                0 / 0
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="my-5">
+                        <div class="flex justify-between text-xs mb-1.5 tracking-widest">
+                            <span>STEP_PROGRESS</span>
+                            <span id="stepsRatioTag">[0 / 0]</span>
+                        </div>
+
+                        <div class="w-full h-11 border-2 border-white p-1 bg-black relative overflow-hidden">
+                            <div
+                                id="step-bar"
+                                class="h-full pattern-stripes border-r-4 border-white"
+                                style="width: 0%;"
+                            ></div>
+                            <div class="absolute inset-0 flex items-center justify-between px-3 pointer-events-none" style="mix-blend-mode: difference;">
+                                <span class="text-xs font-bold tracking-widest text-white">STEP_COUNTER</span>
+                                <span id="stepBarInlineText" class="text-xs font-bold tracking-widest text-white">0.0%</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between text-[10px] sm:text-xs mt-1.5 tracking-widest">
+                            <span>0</span>
+                            <span id="stepTick25">25%</span>
+                            <span id="stepTick50">50%</span>
+                            <span id="stepTick75">75%</span>
+                            <span id="stepTick100">MAX</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <div
+                        id="stepSegmentsContainer"
+                        class="grid gap-1 border border-white p-2 bg-black"
+                        style="grid-template-columns: repeat(20, minmax(0, 1fr));"
+                    ></div>
+                    <div class="bg-black border border-white p-2 text-center text-xs sm:text-sm tracking-widest overflow-hidden">
+                        <span id="stepAsciiBar">[░░░░░░░░░░░░░░░░░░░░]</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="w-full mt-6">
+            <div class="wd-box p-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm tracking-widest">
+                <div class="flex items-center gap-3">
+                    <span class="bg-white text-black font-bold px-2 py-0.5">03</span>
+                    <span>LAST_UPDATE: <strong id="updated">…</strong></span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <button id="toggleSimBtn" type="button" class="wd-btn px-3 py-1 text-xs font-bold tracking-widest">
+                        [TEST_CONTROLS]
+                    </button>
+                    <button id="refreshBtn" type="button" class="wd-btn px-3 py-1 text-xs font-bold tracking-widest">
+                        [FETCH status.json]
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="sandboxPanel" class="w-full mt-4 hidden">
+            <div class="border-2 border-white bg-black p-4 text-xs tracking-widest">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white pb-2 mb-3">
+                    <div>
+                        <span class="bg-white text-black font-bold px-1.5 py-0.5 mr-2">REAL-TIME STREAM</span>
+                        <span id="simModeLabel">SIMULATING LIVE status.json UPDATES</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button id="toggleAutoStreamBtn" type="button" class="wd-btn px-2.5 py-0.5 font-bold">
+                            [AUTO_STREAM: ON]
+                        </button>
+                        <button id="syncSlidersBtn" type="button" class="wd-btn px-2.5 py-0.5 font-bold">
+                            [LINK % &amp; STEPS: ON]
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                    <div class="border border-white p-2.5">
+                        <div class="flex justify-between mb-1">
+                            <span>PERCENT (%):</span>
+                            <strong id="simPercentLabel">0.0%</strong>
+                        </div>
+                        <input id="simPercentInput" type="range" min="0" max="100" step="0.1" value="42.5" class="wd-slider">
+                    </div>
+
+                    <div class="border border-white p-2.5">
+                        <div class="flex justify-between mb-1">
+                            <span>CURRENT STEP:</span>
+                            <strong id="simStepLabel">4250</strong>
+                        </div>
+                        <input id="simStepInput" type="range" min="0" max="10000" step="1" value="4250" class="wd-slider">
+                    </div>
+
+                    <div class="border border-white p-2.5">
+                        <div class="flex justify-between mb-1">
+                            <span>TOTAL STEPS:</span>
+                            <strong id="simStepsTotalLabel">10000</strong>
+                        </div>
+                        <div class="grid grid-cols-3 gap-1.5 mt-1">
+                            <button type="button" data-steps="1000" class="step-preset-btn wd-btn py-1 font-bold">1,000</button>
+                            <button type="button" data-steps="10000" class="step-preset-btn wd-btn py-1 font-bold bg-white text-black">10,000</button>
+                            <button type="button" data-steps="100000" class="step-preset-btn wd-btn py-1 font-bold">100,000</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="w-full max-w-5xl mx-auto mt-6">
+        <div class="border-t-2 border-white pt-2.5 flex flex-wrap justify-between items-center text-[11px] tracking-widest gap-2">
+            <div>GLOBUS AI // READ-ONLY PUBLIC STATUS (status.json)</div>
+            <div>POLL_INTERVAL: 60s // REAL-TIME BAR INTERPOLATION</div>
+        </div>
+    </footer>
+
+    <script>
+        const percentSegmentsContainer = document.getElementById("percentSegmentsContainer");
+        const stepSegmentsContainer = document.getElementById("stepSegmentsContainer");
+        const percentSegmentBoxes = [];
+        const stepSegmentBoxes = [];
+
+        for (let i = 0; i < 20; i++) {
+            const pSeg = document.createElement("div");
+            pSeg.className = "h-3 border border-white";
+            percentSegmentsContainer.appendChild(pSeg);
+            percentSegmentBoxes.push(pSeg);
+
+            const sSeg = document.createElement("div");
+            sSeg.className = "h-3 border border-white";
+            stepSegmentsContainer.appendChild(sSeg);
+            stepSegmentBoxes.push(sSeg);
+        }
+
+        function buildAsciiBar(pct) {
+            const total = 20;
+            const clamped = Math.max(0, Math.min(100, pct));
+            const filled = Math.round((clamped / 100) * total);
+            return "[" + "█".repeat(filled) + "░".repeat(total - filled) + "] " + clamped.toFixed(1) + "%";
+        }
+
+        const animState = {
+            currentPercent: 0,
+            targetPercent: 0,
+            currentStep: 0,
+            targetStep: 0,
+            totalSteps: 10000,
+            updatedText: "…",
+            rafId: null
+        };
+
+        let isLiveStatusJson = false;
+        let autoStreamEnabled = true;
+        let linkSliders = true;
+        let simIntervalId = null;
+
+        function renderProgressFrame(displayPercent, displayStep, totalSteps) {
+            const clampedPercent = Math.max(0, Math.min(100, displayPercent));
+            const cleanTotalSteps = Math.max(0, Math.round(totalSteps));
+            const cleanStep = Math.max(0, Math.min(cleanTotalSteps || Infinity, Math.round(displayStep)));
+
+            const stepsRatioPct = cleanTotalSteps > 0
+                ? Math.max(0, Math.min(100, (displayStep / cleanTotalSteps) * 100))
+                : clampedPercent;
+
+            document.getElementById("percent").textContent = clampedPercent.toFixed(1) + "%";
+            document.getElementById("percent-bar").style.width = clampedPercent.toFixed(2) + "%";
+            document.getElementById("percentBarInlineText").textContent = clampedPercent.toFixed(1) + "%";
+            document.getElementById("percentAsciiBar").textContent = buildAsciiBar(clampedPercent);
+            document.getElementById("percentStatusTag").textContent =
+                clampedPercent >= 100 ? "[COMPLETE // 100%]" : "[TRAINING // " + clampedPercent.toFixed(1) + "%]";
+
+            const activePercentSegs = Math.round((clampedPercent / 100) * 20);
+            for (let i = 0; i < 20; i++) {
+                percentSegmentBoxes[i].style.backgroundColor = i < activePercentSegs ? "#FFFFFF" : "#000000";
+            }
+
+            document.getElementById("step").textContent = cleanStep + " / " + cleanTotalSteps;
+            document.getElementById("step-bar").style.width = stepsRatioPct.toFixed(2) + "%";
+            document.getElementById("stepBarInlineText").textContent = cleanStep + " / " + cleanTotalSteps;
+            document.getElementById("stepsRatioTag").textContent = "[" + stepsRatioPct.toFixed(1) + "%]";
+            document.getElementById("stepAsciiBar").textContent = buildAsciiBar(stepsRatioPct);
+
+            if (cleanTotalSteps > 0) {
+                document.getElementById("stepTick25").textContent = Math.round(cleanTotalSteps * 0.25);
+                document.getElementById("stepTick50").textContent = Math.round(cleanTotalSteps * 0.50);
+                document.getElementById("stepTick75").textContent = Math.round(cleanTotalSteps * 0.75);
+                document.getElementById("stepTick100").textContent = cleanTotalSteps;
+            }
+
+            const activeStepSegs = Math.round((stepsRatioPct / 100) * 20);
+            for (let i = 0; i < 20; i++) {
+                stepSegmentBoxes[i].style.backgroundColor = i < activeStepSegs ? "#FFFFFF" : "#000000";
+            }
+        }
+
+        function animateToTargets() {
+            const diffPct = animState.targetPercent - animState.currentPercent;
+            const diffStep = animState.targetStep - animState.currentStep;
+
+            if (Math.abs(diffPct) < 0.02 && Math.abs(diffStep) < 0.25) {
+                animState.currentPercent = animState.targetPercent;
+                animState.currentStep = animState.targetStep;
+                renderProgressFrame(animState.currentPercent, animState.currentStep, animState.totalSteps);
+                animState.rafId = null;
+                return;
+            }
+
+            animState.currentPercent += diffPct * 0.18;
+            animState.currentStep += diffStep * 0.18;
+            renderProgressFrame(animState.currentPercent, animState.currentStep, animState.totalSteps);
+            animState.rafId = requestAnimationFrame(animateToTargets);
+        }
+
+        function applyData(data, sourceLabel) {
+            const steps = Number(data.steps ?? animState.totalSteps ?? 0);
+            const step = Number(data.step ?? 0);
+            const rawPercent = typeof data.percent === "number"
+                ? data.percent
+                : (steps > 0 ? (step / steps) * 100 : 0);
+
+            const updatedTime =
+                data.updated ??
+                data.time ??
+                data.timestamp ??
+                data.updated_at ??
+                new Date().toLocaleTimeString("ru-RU", { hour12: false });
+
+            animState.totalSteps = steps;
+            animState.targetPercent = Math.max(0, Math.min(100, rawPercent));
+            animState.targetStep = Math.max(0, step);
+            animState.updatedText = updatedTime;
+
+            document.getElementById("updated").textContent = updatedTime;
+            document.getElementById("syncState").textContent = sourceLabel || "[SYNC: OK]";
+
+            const simPercentInput = document.getElementById("simPercentInput");
+            const simStepInput = document.getElementById("simStepInput");
+            if (simPercentInput && simStepInput) {
+                simStepInput.max = String(Math.max(1, steps));
+                simPercentInput.value = String(animState.targetPercent.toFixed(1));
+                simStepInput.value = String(Math.round(animState.targetStep));
+                document.getElementById("simPercentLabel").textContent = animState.targetPercent.toFixed(1) + "%";
+                document.getElementById("simStepLabel").textContent = Math.round(animState.targetStep);
+                document.getElementById("simStepsTotalLabel").textContent = steps;
+            }
+
+            if (!animState.rafId) {
+                animState.rafId = requestAnimationFrame(animateToTargets);
+            }
+        }
+
+        async function show() {
+            try {
+                const response = await fetch("status.json?t=" + Date.now(), { cache: "no-store" });
+                if (!response.ok) throw new Error("HTTP " + response.status);
+                const data = await response.json();
+
+                isLiveStatusJson = true;
+                if (simIntervalId) {
+                    clearInterval(simIntervalId);
+                    simIntervalId = null;
+                }
+                document.getElementById("sandboxPanel").classList.add("hidden");
+                document.getElementById("toggleSimBtn").classList.add("hidden");
+
+                applyData(data, "[SYNC: status.json LIVE]");
+            } catch (err) {
+                if (!isLiveStatusJson && !simIntervalId) {
+                    startLivePreviewStream();
+                }
+            }
+        }
+
+        function startLivePreviewStream() {
+            applyData({
+                percent: 42.5,
+                step: 4250,
+                steps: 10000,
+                updated: new Date().toLocaleTimeString("ru-RU", { hour12: false })
+            }, "[LIVE STREAM // PREVIEW]");
+
+            simIntervalId = setInterval(() => {
+                if (isLiveStatusJson || !autoStreamEnabled) return;
+
+                let nextStep = Math.round(animState.targetStep) + Math.floor(Math.random() * 45 + 15);
+                if (nextStep > animState.totalSteps) {
+                    nextStep = 0;
+                }
+                const nextPercent = animState.totalSteps > 0
+                    ? (nextStep / animState.totalSteps) * 100
+                    : 0;
+
+                applyData({
+                    percent: Number(nextPercent.toFixed(1)),
+                    step: nextStep,
+                    steps: animState.totalSteps,
+                    updated: new Date().toLocaleTimeString("ru-RU", { hour12: false })
+                }, "[LIVE STREAM // REAL-TIME]");
+            }, 1200);
+        }
+
+        document.getElementById("refreshBtn").addEventListener("click", show);
+
+        document.getElementById("toggleSimBtn").addEventListener("click", () => {
+            const panel = document.getElementById("sandboxPanel");
+            panel.classList.toggle("hidden");
+        });
+
+        document.getElementById("toggleAutoStreamBtn").addEventListener("click", (e) => {
+            autoStreamEnabled = !autoStreamEnabled;
+            e.currentTarget.textContent = autoStreamEnabled ? "[AUTO_STREAM: ON]" : "[AUTO_STREAM: PAUSED]";
+        });
+
+        document.getElementById("syncSlidersBtn").addEventListener("click", (e) => {
+            linkSliders = !linkSliders;
+            e.currentTarget.textContent = linkSliders ? "[LINK % & STEPS: ON]" : "[LINK % & STEPS: OFF]";
+        });
+
+        document.getElementById("simPercentInput").addEventListener("input", (e) => {
+            autoStreamEnabled = false;
+            document.getElementById("toggleAutoStreamBtn").textContent = "[AUTO_STREAM: PAUSED]";
+            const newPct = parseFloat(e.target.value) || 0;
+            const newStep = linkSliders
+                ? Math.round((newPct / 100) * animState.totalSteps)
+                : Math.round(animState.targetStep);
+
+            applyData({
+                percent: newPct,
+                step: newStep,
+                steps: animState.totalSteps,
+                updated: new Date().toLocaleTimeString("ru-RU", { hour12: false }) + " (MANUAL)"
+            }, "[MANUAL OVERRIDE]");
+        });
+
+        document.getElementById("simStepInput").addEventListener("input", (e) => {
+            autoStreamEnabled = false;
+            document.getElementById("toggleAutoStreamBtn").textContent = "[AUTO_STREAM: PAUSED]";
+            const newStep = parseInt(e.target.value, 10) || 0;
+            const newPct = linkSliders && animState.totalSteps > 0
+                ? (newStep / animState.totalSteps) * 100
+                : animState.targetPercent;
+
+            applyData({
+                percent: newPct,
+                step: newStep,
+                steps: animState.totalSteps,
+                updated: new Date().toLocaleTimeString("ru-RU", { hour12: false }) + " (MANUAL)"
+            }, "[MANUAL OVERRIDE]");
+        });
+
+        document.querySelectorAll(".step-preset-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".step-preset-btn").forEach(b => {
+                    b.classList.remove("bg-white", "text-black");
+                });
+                btn.classList.add("bg-white", "text-black");
+
+                const newTotal = parseInt(btn.getAttribute("data-steps"), 10) || 10000;
+                const newStep = Math.round((animState.targetPercent / 100) * newTotal);
+                applyData({
+                    percent: animState.targetPercent,
+                    step: newStep,
+                    steps: newTotal,
+                    updated: new Date().toLocaleTimeString("ru-RU", { hour12: false })
+                }, "[STEPS SCALED]");
+            });
+        });
+
+        show();
+        setInterval(show, 60000);
+    </script>
+</body>
+</html>
