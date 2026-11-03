@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Globus Ai // Training Progress</title>
+    <title>Globus Ai training Progress</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,37 +58,9 @@
             background-size: 4px 4px;
         }
 
-        /* Custom 1-Bit Range Slider for Sandbox Testing */
-        input[type="range"].wd-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 12px;
-            background: #000000;
-            border: 2px solid #FFFFFF;
-            outline: none;
-            cursor: pointer;
-        }
-
-        input[type="range"].wd-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 14px;
-            height: 20px;
-            background: #FFFFFF;
-            border: 2px solid #000000;
-             outline: 2px solid #FFFFFF;
-            cursor: pointer;
-        }
-
-        input[type="range"].wd-slider::-moz-range-thumb {
-            width: 14px;
-            height: 20px;
-            background: #FFFFFF;
-            border: 2px solid #000000;
-            outline: 2px solid #FFFFFF;
-            cursor: pointer;
-            border-radius: 0;
+        /* Smooth real-time transition when new status.json data arrives */
+        .bar-fill-transition {
+            transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         /* Watch Dogs Brutalist Box with Corner Cuts / Brackets */
@@ -214,12 +186,10 @@
     <header class="w-full max-w-5xl mx-auto mb-6">
         <div class="border-2 border-white p-2.5 sm:p-3 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
             <div class="flex items-center gap-3">
-                <span class="bg-white text-black font-bold px-2 py-0.5 tracking-widest">POWERED BY RJK3R // MONITOR</span>
-                <span class="tracking-widest">SRC: <strong>status.json</strong></span>
-            </div>
+                <span class="bg-white text-black font-bold px-2 py-0.5 tracking-widest">POWERED BY RJK3R // MONITOR</span>            </div>
             <div class="flex items-center gap-3 sm:gap-4">
-                <span id="syncState" class="tracking-widest">[SYNC: INIT]</span>
-                <span class="bg-white text-black px-2 py-0.5 font-bold cursor-blink">300s_POLL</span>
+                <span id="syncState" class="tracking-widest">UPDATE EVERY</span>
+                <span class="bg-white text-black px-2 py-0.5 font-bold cursor-blink">300 SEC</span>
             </div>
         </div>
     </header>
@@ -228,7 +198,7 @@
 
         <div class="text-center mb-3 leading-none text-[10px] sm:text-xs tracking-widest" aria-hidden="true">
             <div>╔══════════════════════════════════════════════════════╗</div>
-            <div>║  ░░░░▒▒▓▓██  PUBLIC PROGRESS TELEMETRY  ██▓▓▒▒░░░░   ║</div>
+            <div>║  ░░░░▒▒▓▓██  PUBLIC TELEMETRY PROGRESS  ██▓▓▒▒░░░░   ║</div>
             <div>╚══════════════════════════════════════════════════════╝</div>
         </div>
 
@@ -258,7 +228,7 @@
                         <div class="flex items-center gap-2">
                             <span class="bg-white text-black font-bold px-2 py-0.5 text-xs">01</span>
                             <span class="text-sm sm:text-base font-bold tracking-widest uppercase">
-                                PROGRESS // PERCENTS
+                                PROGRESS // PERCENT
                             </span>
                         </div>
                         <span class="text-xs tracking-widest">[%]</span>
@@ -266,27 +236,25 @@
 
                     <div class="text-center my-4 py-4 border border-white pattern-dots">
                         <div class="bg-black inline-block px-6 py-2.5 border border-white">
-                            <span id="percent" class="text-5xl sm:text-6xl font-bold tracking-wider">
-                                0.0%
-                            </span>
+                            <span id="percent" class="text-5xl sm:text-6xl font-bold tracking-wider">WAIT</span>
                         </div>
                     </div>
 
                     <div class="my-5">
                         <div class="flex justify-between text-xs mb-1.5 tracking-widest">
                             <span>COMPLETION_RATIO</span>
-                            <span id="percentStatusTag">[ACTIVE]</span>
+                            <span id="percentStatusTag">[WAIT]</span>
                         </div>
 
                         <div class="w-full h-11 border-2 border-white p-1 bg-black relative overflow-hidden">
                             <div
                                 id="percent-bar"
-                                class="h-full bg-white relative"
+                                class="h-full bg-white relative bar-fill-transition"
                                 style="width: 0%;"
                             ></div>
                             <div class="absolute inset-0 flex items-center justify-between px-3 pointer-events-none" style="mix-blend-mode: difference;">
                                 <span class="text-xs font-bold tracking-widest text-white">PERCENT_FILL</span>
-                                <span id="percentBarInlineText" class="text-xs font-bold tracking-widest text-white">0.0%</span>
+                                <span id="percentBarInlineText" class="text-xs font-bold tracking-widest text-white">WAIT</span>
                             </div>
                         </div>
 
@@ -307,7 +275,7 @@
                         style="grid-template-columns: repeat(20, minmax(0, 1fr));"
                     ></div>
                     <div class="bg-black border border-white p-2 text-center text-xs sm:text-sm tracking-widest overflow-hidden">
-                        <span id="percentAsciiBar">[░░░░░░░░░░░░░░░░░░░░]</span>
+                        <span id="percentAsciiBar">[░░░░░░░░░░░░░░░░░░░░] WAIT</span>
                     </div>
                 </div>
             </div>
@@ -326,27 +294,25 @@
 
                     <div class="text-center my-4 py-4 border border-white pattern-dots">
                         <div class="bg-black inline-block px-5 sm:px-6 py-2.5 border border-white">
-                            <p id="step" class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-wider m-0">
-                                0 / 0
-                            </p>
+                            <p id="step" class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-wider m-0">WAIT</p>
                         </div>
                     </div>
 
                     <div class="my-5">
                         <div class="flex justify-between text-xs mb-1.5 tracking-widest">
                             <span>STEP_PROGRESS</span>
-                            <span id="stepsRatioTag">[0 / 0]</span>
+                            <span id="stepsRatioTag">[WAIT]</span>
                         </div>
 
                         <div class="w-full h-11 border-2 border-white p-1 bg-black relative overflow-hidden">
                             <div
                                 id="step-bar"
-                                class="h-full pattern-stripes border-r-4 border-white"
+                                class="h-full pattern-stripes border-r-4 border-white bar-fill-transition"
                                 style="width: 0%;"
                             ></div>
                             <div class="absolute inset-0 flex items-center justify-between px-3 pointer-events-none" style="mix-blend-mode: difference;">
                                 <span class="text-xs font-bold tracking-widest text-white">STEP_COUNTER</span>
-                                <span id="stepBarInlineText" class="text-xs font-bold tracking-widest text-white">0.0%</span>
+                                <span id="stepBarInlineText" class="text-xs font-bold tracking-widest text-white">WAIT</span>
                             </div>
                         </div>
 
@@ -367,7 +333,7 @@
                         style="grid-template-columns: repeat(20, minmax(0, 1fr));"
                     ></div>
                     <div class="bg-black border border-white p-2 text-center text-xs sm:text-sm tracking-widest overflow-hidden">
-                        <span id="stepAsciiBar">[░░░░░░░░░░░░░░░░░░░░]</span>
+                        <span id="stepAsciiBar">[░░░░░░░░░░░░░░░░░░░░] WAIT</span>
                     </div>
                 </div>
             </div>
@@ -378,64 +344,12 @@
             <div class="wd-box p-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm tracking-widest">
                 <div class="flex items-center gap-3">
                     <span class="bg-white text-black font-bold px-2 py-0.5">03</span>
-                    <span>LAST_UPDATE: <strong id="updated">…</strong></span>
+                    <span>LAST_UPDATE: <strong id="updated">WAIT</strong></span>
                 </div>
                 <div class="flex flex-wrap items-center gap-3">
-                    <button id="toggleSimBtn" type="button" class="wd-btn px-3 py-1 text-xs font-bold tracking-widest">
-                        [TEST_CONTROLS]
-                    </button>
                     <button id="refreshBtn" type="button" class="wd-btn px-3 py-1 text-xs font-bold tracking-widest">
                         [FETCH status.json]
                     </button>
-                </div>
-            </div>
-        </section>
-
-        <section id="sandboxPanel" class="w-full mt-4 hidden">
-            <div class="border-2 border-white bg-black p-4 text-xs tracking-widest">
-                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white pb-2 mb-3">
-                    <div>
-                        <span class="bg-white text-black font-bold px-1.5 py-0.5 mr-2">REAL-TIME STREAM</span>
-                        <span id="simModeLabel">SIMULATING LIVE status.json UPDATES</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button id="toggleAutoStreamBtn" type="button" class="wd-btn px-2.5 py-0.5 font-bold">
-                            [AUTO_STREAM: ON]
-                        </button>
-                        <button id="syncSlidersBtn" type="button" class="wd-btn px-2.5 py-0.5 font-bold">
-                            [LINK % &amp; STEPS: ON]
-                        </button>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-                    <div class="border border-white p-2.5">
-                        <div class="flex justify-between mb-1">
-                            <span>PERCENT (%):</span>
-                            <strong id="simPercentLabel">0.0%</strong>
-                        </div>
-                        <input id="simPercentInput" type="range" min="0" max="100" step="0.1" value="42.5" class="wd-slider">
-                    </div>
-
-                    <div class="border border-white p-2.5">
-                        <div class="flex justify-between mb-1">
-                            <span>CURRENT STEP:</span>
-                            <strong id="simStepLabel">4250</strong>
-                        </div>
-                        <input id="simStepInput" type="range" min="0" max="10000" step="1" value="4250" class="wd-slider">
-                    </div>
-
-                    <div class="border border-white p-2.5">
-                        <div class="flex justify-between mb-1">
-                            <span>TOTAL STEPS:</span>
-                            <strong id="simStepsTotalLabel">10000</strong>
-                        </div>
-                        <div class="grid grid-cols-3 gap-1.5 mt-1">
-                            <button type="button" data-steps="1000" class="step-preset-btn wd-btn py-1 font-bold">1,000</button>
-                            <button type="button" data-steps="10000" class="step-preset-btn wd-btn py-1 font-bold bg-white text-black">10,000</button>
-                            <button type="button" data-steps="100000" class="step-preset-btn wd-btn py-1 font-bold">100,000</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
@@ -444,8 +358,8 @@
 
     <footer class="w-full max-w-5xl mx-auto mt-6">
         <div class="border-t-2 border-white pt-2.5 flex flex-wrap justify-between items-center text-[11px] tracking-widest gap-2">
-            <div>GLOBUS AI // READ-ONLY PUBLIC STATUS (status.json)</div>
-            <div>POLL_INTERVAL: 60s // REAL-TIME BAR INTERPOLATION</div>
+            <div>GLOBUS AI // TRAINING STATUS MONITOR (status.json)</div>
+            <div>ChillEngine Labs</div>
         </div>
     </footer>
 
@@ -457,12 +371,12 @@
 
         for (let i = 0; i < 20; i++) {
             const pSeg = document.createElement("div");
-            pSeg.className = "h-3 border border-white";
+            pSeg.className = "h-3 border border-white bg-black";
             percentSegmentsContainer.appendChild(pSeg);
             percentSegmentBoxes.push(pSeg);
 
             const sSeg = document.createElement("div");
-            sSeg.className = "h-3 border border-white";
+            sSeg.className = "h-3 border border-white bg-black";
             stepSegmentsContainer.appendChild(sSeg);
             stepSegmentBoxes.push(sSeg);
         }
@@ -474,234 +388,99 @@
             return "[" + "█".repeat(filled) + "░".repeat(total - filled) + "] " + clamped.toFixed(1) + "%";
         }
 
-        const animState = {
-            currentPercent: 0,
-            targetPercent: 0,
-            currentStep: 0,
-            targetStep: 0,
-            totalSteps: 10000,
-            updatedText: "…",
-            rafId: null
-        };
+        let hasReceivedRealData = false;
 
-        let isLiveStatusJson = false;
-        let autoStreamEnabled = true;
-        let linkSliders = true;
-        let simIntervalId = null;
+        function setWaitState() {
+            document.getElementById("percent").textContent = "WAIT";
+            document.getElementById("step").textContent = "WAIT";
+            document.getElementById("updated").textContent = "WAIT";
+            document.getElementById("syncState").textContent = "[STATUS: WAIT]";
 
-        function renderProgressFrame(displayPercent, displayStep, totalSteps) {
-            const clampedPercent = Math.max(0, Math.min(100, displayPercent));
-            const cleanTotalSteps = Math.max(0, Math.round(totalSteps));
-            const cleanStep = Math.max(0, Math.min(cleanTotalSteps || Infinity, Math.round(displayStep)));
+            document.getElementById("percent-bar").style.width = "0%";
+            document.getElementById("percentBarInlineText").textContent = "WAIT";
+            document.getElementById("percentStatusTag").textContent = "[WAIT]";
+            document.getElementById("percentAsciiBar").textContent = "[░░░░░░░░░░░░░░░░░░░░] WAIT";
 
-            const stepsRatioPct = cleanTotalSteps > 0
-                ? Math.max(0, Math.min(100, (displayStep / cleanTotalSteps) * 100))
-                : clampedPercent;
+            document.getElementById("step-bar").style.width = "0%";
+            document.getElementById("stepBarInlineText").textContent = "WAIT";
+            document.getElementById("stepsRatioTag").textContent = "[WAIT]";
+            document.getElementById("stepAsciiBar").textContent = "[░░░░░░░░░░░░░░░░░░░░] WAIT";
 
-            document.getElementById("percent").textContent = clampedPercent.toFixed(1) + "%";
-            document.getElementById("percent-bar").style.width = clampedPercent.toFixed(2) + "%";
-            document.getElementById("percentBarInlineText").textContent = clampedPercent.toFixed(1) + "%";
-            document.getElementById("percentAsciiBar").textContent = buildAsciiBar(clampedPercent);
-            document.getElementById("percentStatusTag").textContent =
-                clampedPercent >= 100 ? "[COMPLETE // 100%]" : "[TRAINING // " + clampedPercent.toFixed(1) + "%]";
-
-            const activePercentSegs = Math.round((clampedPercent / 100) * 20);
             for (let i = 0; i < 20; i++) {
-                percentSegmentBoxes[i].style.backgroundColor = i < activePercentSegs ? "#FFFFFF" : "#000000";
-            }
-
-            document.getElementById("step").textContent = cleanStep + " / " + cleanTotalSteps;
-            document.getElementById("step-bar").style.width = stepsRatioPct.toFixed(2) + "%";
-            document.getElementById("stepBarInlineText").textContent = cleanStep + " / " + cleanTotalSteps;
-            document.getElementById("stepsRatioTag").textContent = "[" + stepsRatioPct.toFixed(1) + "%]";
-            document.getElementById("stepAsciiBar").textContent = buildAsciiBar(stepsRatioPct);
-
-            if (cleanTotalSteps > 0) {
-                document.getElementById("stepTick25").textContent = Math.round(cleanTotalSteps * 0.25);
-                document.getElementById("stepTick50").textContent = Math.round(cleanTotalSteps * 0.50);
-                document.getElementById("stepTick75").textContent = Math.round(cleanTotalSteps * 0.75);
-                document.getElementById("stepTick100").textContent = cleanTotalSteps;
-            }
-
-            const activeStepSegs = Math.round((stepsRatioPct / 100) * 20);
-            for (let i = 0; i < 20; i++) {
-                stepSegmentBoxes[i].style.backgroundColor = i < activeStepSegs ? "#FFFFFF" : "#000000";
-            }
-        }
-
-        function animateToTargets() {
-            const diffPct = animState.targetPercent - animState.currentPercent;
-            const diffStep = animState.targetStep - animState.currentStep;
-
-            if (Math.abs(diffPct) < 0.02 && Math.abs(diffStep) < 0.25) {
-                animState.currentPercent = animState.targetPercent;
-                animState.currentStep = animState.targetStep;
-                renderProgressFrame(animState.currentPercent, animState.currentStep, animState.totalSteps);
-                animState.rafId = null;
-                return;
-            }
-
-            animState.currentPercent += diffPct * 0.18;
-            animState.currentStep += diffStep * 0.18;
-            renderProgressFrame(animState.currentPercent, animState.currentStep, animState.totalSteps);
-            animState.rafId = requestAnimationFrame(animateToTargets);
-        }
-
-        function applyData(data, sourceLabel) {
-            const steps = Number(data.steps ?? animState.totalSteps ?? 0);
-            const step = Number(data.step ?? 0);
-            const rawPercent = typeof data.percent === "number"
-                ? data.percent
-                : (steps > 0 ? (step / steps) * 100 : 0);
-
-            const updatedTime =
-                data.updated ??
-                data.time ??
-                data.timestamp ??
-                data.updated_at ??
-                new Date().toLocaleTimeString("ru-RU", { hour12: false });
-
-            animState.totalSteps = steps;
-            animState.targetPercent = Math.max(0, Math.min(100, rawPercent));
-            animState.targetStep = Math.max(0, step);
-            animState.updatedText = updatedTime;
-
-            document.getElementById("updated").textContent = updatedTime;
-            document.getElementById("syncState").textContent = sourceLabel || "[SYNC: OK]";
-
-            const simPercentInput = document.getElementById("simPercentInput");
-            const simStepInput = document.getElementById("simStepInput");
-            if (simPercentInput && simStepInput) {
-                simStepInput.max = String(Math.max(1, steps));
-                simPercentInput.value = String(animState.targetPercent.toFixed(1));
-                simStepInput.value = String(Math.round(animState.targetStep));
-                document.getElementById("simPercentLabel").textContent = animState.targetPercent.toFixed(1) + "%";
-                document.getElementById("simStepLabel").textContent = Math.round(animState.targetStep);
-                document.getElementById("simStepsTotalLabel").textContent = steps;
-            }
-
-            if (!animState.rafId) {
-                animState.rafId = requestAnimationFrame(animateToTargets);
+                percentSegmentBoxes[i].style.backgroundColor = "#000000";
+                stepSegmentBoxes[i].style.backgroundColor = "#000000";
             }
         }
 
         async function show() {
             try {
-                const response = await fetch("status.json?t=" + Date.now(), { cache: "no-store" });
-                if (!response.ok) throw new Error("HTTP " + response.status);
-                const data = await response.json();
+                const data = await fetch("status.json?t=" + Date.now(), { cache: "no-store" }).then(r => {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.json();
+                });
 
-                isLiveStatusJson = true;
-                if (simIntervalId) {
-                    clearInterval(simIntervalId);
-                    simIntervalId = null;
+                const pct = Math.max(0, Math.min(100, Number(data.percent)));
+                const step = Number(data.step);
+                const steps = Number(data.steps);
+                const stepPct = steps > 0
+                    ? Math.max(0, Math.min(100, (step / steps) * 100))
+                    : 0;
+
+                const updatedValue =
+                    data.updated ??
+                    data.time ??
+                    data.timestamp ??
+                    data.updated_at ??
+                    "WAIT";
+
+                hasReceivedRealData = true;
+
+                const formattedPercent = pct.toFixed(1) + "%";
+                document.getElementById("percent").textContent = formattedPercent;
+                document.getElementById("percent-bar").style.width = pct + "%";
+                document.getElementById("percentBarInlineText").textContent = formattedPercent;
+                document.getElementById("percentStatusTag").textContent =
+                    pct >= 100 ? "[COMPLETE]" : "[" + formattedPercent + "]";
+                document.getElementById("percentAsciiBar").textContent = buildAsciiBar(pct);
+
+                const activePercentSegs = Math.round((pct / 100) * 20);
+                for (let i = 0; i < 20; i++) {
+                    percentSegmentBoxes[i].style.backgroundColor = i < activePercentSegs ? "#FFFFFF" : "#000000";
                 }
-                document.getElementById("sandboxPanel").classList.add("hidden");
-                document.getElementById("toggleSimBtn").classList.add("hidden");
 
-                applyData(data, "[SYNC: status.json LIVE]");
+                const formattedSteps = step + " / " + steps;
+                document.getElementById("step").textContent = formattedSteps;
+                document.getElementById("step-bar").style.width = stepPct + "%";
+                document.getElementById("stepBarInlineText").textContent = formattedSteps;
+                document.getElementById("stepsRatioTag").textContent = "[" + stepPct.toFixed(1) + "%]";
+                document.getElementById("stepAsciiBar").textContent = buildAsciiBar(stepPct);
+
+                if (steps > 0) {
+                    document.getElementById("stepTick25").textContent = Math.round(steps * 0.25);
+                    document.getElementById("stepTick50").textContent = Math.round(steps * 0.50);
+                    document.getElementById("stepTick75").textContent = Math.round(steps * 0.75);
+                    document.getElementById("stepTick100").textContent = steps;
+                }
+
+                const activeStepSegs = Math.round((stepPct / 100) * 20);
+                for (let i = 0; i < 20; i++) {
+                    stepSegmentBoxes[i].style.backgroundColor = i < activeStepSegs ? "#FFFFFF" : "#000000";
+                }
+
+                document.getElementById("updated").textContent = String(updatedValue);
+                document.getElementById("syncState").textContent = "[SYNC: OK]";
             } catch (err) {
-                if (!isLiveStatusJson && !simIntervalId) {
-                    startLivePreviewStream();
+                if (!hasReceivedRealData) {
+                    setWaitState();
+                } else {
+                    document.getElementById("syncState").textContent = "[SYNC: RETRYING]";
                 }
             }
         }
 
-        function startLivePreviewStream() {
-            applyData({
-                percent: 42.5,
-                step: 4250,
-                steps: 10000,
-                updated: new Date().toLocaleTimeString("ru-RU", { hour12: false })
-            }, "[LIVE STREAM // PREVIEW]");
-
-            simIntervalId = setInterval(() => {
-                if (isLiveStatusJson || !autoStreamEnabled) return;
-
-                let nextStep = Math.round(animState.targetStep) + Math.floor(Math.random() * 45 + 15);
-                if (nextStep > animState.totalSteps) {
-                    nextStep = 0;
-                }
-                const nextPercent = animState.totalSteps > 0
-                    ? (nextStep / animState.totalSteps) * 100
-                    : 0;
-
-                applyData({
-                    percent: Number(nextPercent.toFixed(1)),
-                    step: nextStep,
-                    steps: animState.totalSteps,
-                    updated: new Date().toLocaleTimeString("ru-RU", { hour12: false })
-                }, "[LIVE STREAM // REAL-TIME]");
-            }, 1200);
-        }
-
         document.getElementById("refreshBtn").addEventListener("click", show);
 
-        document.getElementById("toggleSimBtn").addEventListener("click", () => {
-            const panel = document.getElementById("sandboxPanel");
-            panel.classList.toggle("hidden");
-        });
-
-        document.getElementById("toggleAutoStreamBtn").addEventListener("click", (e) => {
-            autoStreamEnabled = !autoStreamEnabled;
-            e.currentTarget.textContent = autoStreamEnabled ? "[AUTO_STREAM: ON]" : "[AUTO_STREAM: PAUSED]";
-        });
-
-        document.getElementById("syncSlidersBtn").addEventListener("click", (e) => {
-            linkSliders = !linkSliders;
-            e.currentTarget.textContent = linkSliders ? "[LINK % & STEPS: ON]" : "[LINK % & STEPS: OFF]";
-        });
-
-        document.getElementById("simPercentInput").addEventListener("input", (e) => {
-            autoStreamEnabled = false;
-            document.getElementById("toggleAutoStreamBtn").textContent = "[AUTO_STREAM: PAUSED]";
-            const newPct = parseFloat(e.target.value) || 0;
-            const newStep = linkSliders
-                ? Math.round((newPct / 100) * animState.totalSteps)
-                : Math.round(animState.targetStep);
-
-            applyData({
-                percent: newPct,
-                step: newStep,
-                steps: animState.totalSteps,
-                updated: new Date().toLocaleTimeString("ru-RU", { hour12: false }) + " (MANUAL)"
-            }, "[MANUAL OVERRIDE]");
-        });
-
-        document.getElementById("simStepInput").addEventListener("input", (e) => {
-            autoStreamEnabled = false;
-            document.getElementById("toggleAutoStreamBtn").textContent = "[AUTO_STREAM: PAUSED]";
-            const newStep = parseInt(e.target.value, 10) || 0;
-            const newPct = linkSliders && animState.totalSteps > 0
-                ? (newStep / animState.totalSteps) * 100
-                : animState.targetPercent;
-
-            applyData({
-                percent: newPct,
-                step: newStep,
-                steps: animState.totalSteps,
-                updated: new Date().toLocaleTimeString("ru-RU", { hour12: false }) + " (MANUAL)"
-            }, "[MANUAL OVERRIDE]");
-        });
-
-        document.querySelectorAll(".step-preset-btn").forEach((btn) => {
-            btn.addEventListener("click", () => {
-                document.querySelectorAll(".step-preset-btn").forEach(b => {
-                    b.classList.remove("bg-white", "text-black");
-                });
-                btn.classList.add("bg-white", "text-black");
-
-                const newTotal = parseInt(btn.getAttribute("data-steps"), 10) || 10000;
-                const newStep = Math.round((animState.targetPercent / 100) * newTotal);
-                applyData({
-                    percent: animState.targetPercent,
-                    step: newStep,
-                    steps: newTotal,
-                    updated: new Date().toLocaleTimeString("ru-RU", { hour12: false })
-                }, "[STEPS SCALED]");
-            });
-        });
-
+        setWaitState();
         show();
         setInterval(show, 60000);
     </script>
